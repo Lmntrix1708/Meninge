@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Information on Meningococcal Vaccine – Bilingual FAQ</title>
+  <link rel="icon" href="images/favicon.png" type="image/png" sizes="32x32">
+  <style>
+    /* ==== Global Styles and Layout ==== */
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, sans-serif;
+      color: #333;
+      line-height: 1.6;
+      background: #fdfdfd;
+    }
+    h1, h2, h3, p {
+      margin: 0;
+    }
+    .content {
+      max-width: 1200px;
+      margin: 0 auto;  
+      padding: 80px 15px 40px 15px;
+    }
+
+    /* ==== Q&A background on the full-width wrapper ==== */
+    #qna-section {
+      background: url('images/background.png') repeat;
+    }
+
+    /* justify every question and answer */
+    .question,
+    .answer {
+      text-align: justify;
+      font-size: 1.25em;     
+      line-height: 1.5;
+    }
+
+    .question {
+      font-weight: bold;
+    }
+
+    /* ==== Q&A spacing adjustments ==== */
+    /* 1) space between each Q&A block */
+    .faq-item {
+      margin-bottom: 2em;    /* ← tweak this to increase/decrease gap between question-answer pairs */
+    }
+
+    /* 2) small space between a question and its answer */
+    .faq-item .question {
+      margin-bottom: 0.5em;  /* ← tweak this to adjust gap between the question and its answer */
+    }
+
+    /* ==== Banner and Header Section ==== */
+    .banner {
+      position: relative;
+      width: 100%;
+      height: 400px;
+      overflow: hidden;
+      background: #000;
+    }
+    .banner .slide {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      opacity: 0;
+      transition: opacity 1s ease;
+    }
+    .banner .slide.active {
+      opacity: 1;
+    }
+    .banner .slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .banner::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.4);
+      z-index: 1;
+      pointer-events: none;
+    }
+    .banner-text {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      color: #fff;
+      z-index: 2;
+      padding: 0 20px;
+    }
+    .banner-text h1 {
+      font-size: 3.6em;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    @media(max-width: 600px) {
+      .banner-text h1 { 
+        font-size: 3.0em; 
+        white-space: nowrap;
+      }
+    }
+
+    /* ==== Language Toggle Styles ==== */
+    .lang-toggle {
+      position: absolute;
+      top: 10px; right: 10px;
+      z-index: 3;
+      background: rgba(0, 0, 0, 0.5);
+      padding: 4px 8px;
+      border-radius: 4px;
+      color: #fff;
+      font-size: 0.9em;
+      font-weight: bold;
+    }
+    .lang-toggle span { cursor: pointer; }
+    .lang-toggle .active { text-decoration: underline; }
+
+    .banner-logo {
+      position: absolute;
+      top: 10px;       
+      left: 10px;      
+      width: 200px;    
+      height: auto;
+      z-index: 2;      
+    }
+
+    /* ==== Chatbot Button Styles ==== */
+    .chat-button {
+      position: fixed;
+      top: 90%;
+      right: 0;
+      transform: translateY(-50%);
+      background: #5e2b8a;
+      color: #fff;
+      padding: 12px 16px;
+      font-size: 0.9em;
+      font-weight: bold;
+      text-decoration: none;
+      border-radius: 4px 0 0 4px;
+      box-shadow: -2px 2px 5px rgba(0,0,0,0.3);
+    }
+    .chat-button:hover { background: #481f66; }
+    @media(max-width: 600px) {
+      .chat-button {
+        top: auto;
+        bottom: 15px;
+        right: 15px;
+        transform: none;
+        border-radius: 50px;
+      }
+    }
+
+    /* ==== FAQ search bar ==== */
+    #search-input {
+      width: 100%;
+      padding: 0.5em;
+      font-size: 1.25em;
+      margin-bottom: 1.1em;       /* gap between search and first Q&A */
+      border: 1px solid #ccc;
+      border-radius: 25px;
+      box-sizing: border-box;   /* include padding in 100% width */
+    }
+
+    /* ==== Highlighted search matches ==== */
+    .highlighted {
+      background-color: #5e2b8a; /* same purple as your chatbot button */
+      color: #fff;
+      padding: 0 0.2em;
+      border-radius: 2px;
+    }
+
+    /* ==== Accordion styling ==== */
+    .faq-item details {
+      margin-bottom: 2em;        /* same space between pairs as before */
+    }
+
+    .faq-item details summary {
+      cursor: pointer;
+      list-style: none;          /* remove default marker */
+      position: relative;
+      padding-left: 1.5em;       /* space for our custom arrow */
+    }
+
+    /* the little arrow */
+    .faq-item details summary::before {
+      content: '▶';
+      position: absolute;
+      left: 0;
+      top: 0.1em;
+      transition: transform 0.2s ease;
+    }
+
+    /* rotate arrow when open */
+    .faq-item details[open] summary::before {
+      transform: rotate(90deg);
+    }
+
+    /* a bit of breathing room for the answer */
+    .faq-item details .answer {
+      margin: 0.5em 0 0 1em;
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- Banner with rotating images -->
+  <header class="banner">
+    <img 
+      src="images/logo_drReddys.png" 
+      alt="Dr. Reddy's Logo" 
+      class="banner-logo" 
+    />
+    <div class="lang-toggle">
+      <span id="toggle-en" class="active">English</span> | 
+      <span id="toggle-hi">हिंदी</span>
+    </div>
+    <div class="banner-text">
+      <h1 class="en">Information on Meningococcal Vaccine</h1>
+      <h1 class="hi" style="display:none;">मेनिनजोकॉकल वैक्सीन के बारे में जानकारी</h1>
+    </div>
+    <div class="slide active">
+      <img src="images/banner1.jpg" alt="Banner image 1" />
+    </div>
+    <div class="slide">
+      <img src="images/banner2.jpg" alt="Banner image 2" />
+    </div>
+    <div class="slide">
+      <img src="images/banner3.jpg" alt="Banner image 3" />
+    </div>
+  </header>
+
+  <!-- full-width section for tiled background -->
+  <section id="qna-section">
+    <main class="content">
+      <input
+        id="search-input"
+        type="text"
+        placeholder="🔍 Search"
+      />
+      <div id="qa-container"></div>
+    </main>
+  </section>
+
+  <!-- Chatbot -->
+  <a href="https://cdn.botpress.cloud/webchat/v2.4/shareable.html?configUrl=https://files.bpcontent.cloud/2025/05/02/06/20250502063754-FSX9AXUE.json"
+     class="chat-button" target="_blank">
+    Clear all your doubts with Meninge Chatbot
+  </a>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // --- 1) Fetch & inject Q&A ---
+      fetch('qna.html')
+        .then(res => {
+          if (!res.ok) throw new Error(`HTTP ${res.status}`);
+          return res.text();
+        })
+        .then(html => {
+          document.getElementById('qa-container').innerHTML = html;
+    
+          // --- 2) Now that Q&A is in the DOM, bind the language toggles ---
+          const toggleEn = document.getElementById('toggle-en');
+          const toggleHi = document.getElementById('toggle-hi');
+    
+          function showEn() {
+            document.getElementById('english-content').style.display = 'block';
+            document.getElementById('hindi-content').style.display = 'none';
+            document.querySelector('.banner-text .en').style.display = 'block';
+            document.querySelector('.banner-text .hi').style.display = 'none';
+            toggleEn.classList.add('active');
+            toggleHi.classList.remove('active');
+          }
+
+          //  Search/filter + highlight + auto-expand logic
+          const searchInput = document.getElementById('search-input');
+          searchInput.addEventListener('input', () => {
+            const raw   = searchInput.value.trim();
+            const query = raw.toLowerCase();
+
+            document.querySelectorAll('#qa-container .faq-item').forEach(item => {
+              const detail = item.querySelector('details');
+              const text   = item.textContent.toLowerCase();
+              const isMatch = query !== '' && text.includes(query);
+
+              // show matching items (or all if box is empty)
+              item.style.display = (raw === '' || isMatch) ? 'block' : 'none';
+
+              // auto-expand matching FAQs, collapse otherwise
+              if (raw === '') {
+                detail.open = false;
+              } else {
+                detail.open = isMatch;
+              }
+
+              // clear old highlights & reapply
+              item.querySelectorAll('.question, .answer').forEach(el => {
+                const txt = el.textContent;
+                if (!query) {
+                  el.innerHTML = txt;
+                } else {
+                  const esc = raw.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                  const regex = new RegExp(`(${esc})`, 'gi');
+                  el.innerHTML = txt.replace(regex, '<span class="highlighted">$1</span>');
+                }
+              });
+            });
+          });
+    
+          function showHi() {
+            document.getElementById('english-content').style.display = 'none';
+            document.getElementById('hindi-content').style.display = 'block';
+            document.querySelector('.banner-text .en').style.display = 'none';
+            document.querySelector('.banner-text .hi').style.display = 'block';
+            toggleHi.classList.add('active');
+            toggleEn.classList.remove('active');
+          }
+    
+          toggleEn.addEventListener('click', showEn);
+          toggleHi.addEventListener('click', showHi);
+    
+          // --- 3) Show English by default ---
+          showEn();
+        })
+        .catch(err => console.error('Failed to load Q&A:', err));
+    
+      // --- 4) Banner slider (unchanged) ---
+      let slideIndex = 0;
+      const slides = document.querySelectorAll('.banner .slide');
+      setInterval(() => {
+        slides[slideIndex].classList.remove('active');
+        slideIndex = (slideIndex + 1) % slides.length;
+        slides[slideIndex].classList.add('active');
+      }, 5000);
+    });
+    </script>
+        
+
+</body>
+</html>
