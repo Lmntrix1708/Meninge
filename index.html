@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Information on Meningococcal Meningitis – Bilingual FAQ</title>
+  <title>Information on Meningococcal Meningitis – Home</title>
   <link rel="icon" href="images/favicon.png" type="image/png" sizes="32x32">
   <style>
     /* ==== Global Styles and Layout ==== */
@@ -14,234 +14,173 @@
       line-height: 1.6;
       background: #fdfdfd;
     }
-    h1, h2, h3, p {
-      margin: 0;
-    }
+    h1, h2, h3, p { margin: 0; }
     .content {
       max-width: 1200px;
-      margin: 0 auto;  
+      margin: 0 auto;
       padding: 80px 15px 40px 15px;
     }
 
-    /* ==== Q&A background on the full-width wrapper ==== */
+    /* ==== Full-width Q&A background ==== */
     #qna-section {
       background: url('images/background.png') repeat;
     }
-
-    /* justify every question and answer */
-    .question,
-    .answer {
+    /* justify text + sizing */
+    .question, .answer {
       text-align: justify;
-      font-size: 1.25em;     
+      font-size: 1.25em;
       line-height: 1.5;
     }
+    .question { font-weight: bold; }
+    .faq-item { margin-bottom: 2em; }
+    .faq-item .question { margin-bottom: 0.5em; }
 
-    .question {
-      font-weight: bold;
-    }
-
-    /* ==== Q&A spacing adjustments ==== */
-    /* 1) space between each Q&A block */
-    .faq-item {
-      margin-bottom: 2em;    /* ← tweak this to increase/decrease gap between question-answer pairs */
-    }
-
-    /* 2) small space between a question and its answer */
-    .faq-item .question {
-      margin-bottom: 0.5em;  /* ← tweak this to adjust gap between the question and its answer */
-    }
-
-    /* ==== Banner and Header Section ==== */
+    /* ==== Banner / Header ==== */
     .banner {
       position: relative;
-      width: 100%;
-      height: 400px;
-      overflow: hidden;
-      background: #000;
+      width: 100%; height: 400px;
+      overflow: hidden; background: #000;
     }
     .banner .slide {
-      position: absolute;
-      top: 0; left: 0;
+      position: absolute; top: 0; left: 0;
       width: 100%; height: 100%;
-      opacity: 0;
-      transition: opacity 1s ease;
+      opacity: 0; transition: opacity 1s ease;
     }
-    .banner .slide.active {
-      opacity: 1;
-    }
+    .banner .slide.active { opacity: 1; }
     .banner .slide img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
+      width: 100%; height: 100%; object-fit: cover;
     }
     .banner::before {
-      content: "";
-      position: absolute;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(0, 0, 0, 0.4);
-      z-index: 1;
-      pointer-events: none;
+      content:""; position:absolute; top:0; left:0;
+      width:100%; height:100%;
+      background:rgba(0,0,0,0.4);
+      z-index:1; pointer-events:none;
+    }
+    .banner-logo {
+      position:absolute; top:10px; left:10px;
+      width:120px; height:auto; z-index:2;
     }
     .banner-text {
-      position: absolute;
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      text-align: center;
-      color: #fff;
-      z-index: 2;
-      padding: 0 20px;
+      position:absolute; top:50%; left:50%;
+      transform:translate(-50%,-50%);
+      text-align:center; color:#fff; z-index:2;
+      padding:0 20px;
     }
     .banner-text h1 {
-      font-size: 3.6em;
-      font-weight: 700;
-      white-space: nowrap;
+      font-size:3.6em; font-weight:700;
+      white-space:nowrap;
     }
-    @media(max-width: 600px) {
-      .banner-text h1 { 
-        font-size: 1.2em; 
-        white-space: nowrap;
-      }
+    @media(max-width:600px){
+      .banner-text h1 { font-size:3.0em; white-space:nowrap; }
     }
 
-    /* ==== Language Toggle Styles ==== */
+    /* ==== Site Navigation ==== */
+    .site-nav {
+      margin-top:0.5em; font-size:1em;
+    }
+    .site-nav a {
+      color:#fff; text-decoration:none;
+      margin:0 0.5em; font-weight:500;
+    }
+    .site-nav a.active { text-decoration:underline; }
+
+    /* ==== Language Toggle ==== */
     .lang-toggle {
-      position: absolute;
-      top: 10px; right: 10px;
-      z-index: 3;
-      background: rgba(0, 0, 0, 0.5);
-      padding: 4px 8px;
-      border-radius: 4px;
-      color: #fff;
-      font-size: 0.9em;
-      font-weight: bold;
+      position:absolute; top:10px; right:10px; z-index:3;
+      background:rgba(0,0,0,0.5);
+      padding:4px 8px; border-radius:4px;
+      color:#fff; font-size:0.9em; font-weight:bold;
     }
-    .lang-toggle span { cursor: pointer; }
-    .lang-toggle .active { text-decoration: underline; }
+    .lang-toggle span { cursor:pointer; }
+    .lang-toggle .active { text-decoration:underline; }
 
-    .banner-logo {
-      position: absolute;
-      top: 10px;       
-      left: 10px;      
-      width: 200px;    
-      height: auto;
-      z-index: 2;      
-    }
-
-    /* ==== Chatbot Button Styles ==== */
+    /* ==== Chatbot Button ==== */
     .chat-button {
-      position: fixed;
-      top: 90%;
-      right: 0;
-      transform: translateY(-50%);
-      background: #5e2b8a;
-      color: #fff;
-      padding: 12px 16px;
-      font-size: 0.9em;
-      font-weight: bold;
-      text-decoration: none;
-      border-radius: 4px 0 0 4px;
-      box-shadow: -2px 2px 5px rgba(0,0,0,0.3);
+      position:fixed; top:90%; right:15px;
+      transform:translateY(-50%);
+      background:#5e2b8a; color:#fff;
+      padding:12px 16px; font-size:0.9em;
+      font-weight:bold; text-decoration:none;
+      border-radius:4px 0 0 4px;
+      box-shadow:-2px 2px 5px rgba(0,0,0,0.3);
     }
-    .chat-button:hover { background: #481f66; }
-    @media(max-width: 600px) {
+    .chat-button:hover { background:#481f66; }
+    @media(max-width:600px){
       .chat-button {
-        top: auto;
-        bottom: 15px;
-        right: 15px;
-        transform: none;
-        border-radius: 50px;
+        top:auto; bottom:15px; right:15px;
+        transform:none; border-radius:50px;
       }
     }
 
-    /* ==== FAQ search bar ==== */
+    /* ==== Search Bar ==== */
     #search-input {
-      width: 100%;
-      padding: 0.5em;
-      font-size: 1.25em;
-      margin-bottom: 1.1em;       /* gap between search and first Q&A */
-      border: 1px solid #ccc;
-      border-radius: 25px;
-      box-sizing: border-box;   /* include padding in 100% width */
+      width:100%; padding:0.5em;
+      font-size:1.25em; margin-bottom:1.1em;
+      border:1px solid #ccc; border-radius:25px;
+      box-sizing:border-box;
     }
 
-    /* ==== Highlighted search matches ==== */
+    /* ==== Highlight ==== */
     .highlighted {
-      background-color: #5e2b8a; /* same purple as your chatbot button */
-      color: #fff;
-      padding: 0 0.2em;
-      border-radius: 2px;
+      background-color:#5e2b8a; color:#fff;
+      padding:0 0.2em; border-radius:2px;
     }
 
-    /* ==== Accordion styling ==== */
-    .faq-item details {
-      margin-bottom: 2em;        /* same space between pairs as before */
-    }
-
+    /* ==== Accordion ==== */
+    .faq-item details { margin-bottom:2em; }
     .faq-item details summary {
-      cursor: pointer;
-      list-style: none;          /* remove default marker */
-      position: relative;
-      padding-left: 1.5em;       /* space for our custom arrow */
+      cursor:pointer; list-style:none;
+      position:relative; padding-left:1.5em;
     }
-
-    /* the little arrow */
     .faq-item details summary::before {
-      content: '▶';
-      position: absolute;
-      left: 0;
-      top: 0.1em;
-      transition: transform 0.2s ease;
+      content:'▶'; position:absolute; left:0; top:0.1em;
+      transition:transform 0.2s ease;
     }
-
-    /* rotate arrow when open */
     .faq-item details[open] summary::before {
-      transform: rotate(90deg);
+      transform:rotate(90deg);
     }
-
-    /* a bit of breathing room for the answer */
     .faq-item details .answer {
-      margin: 0.5em 0 0 1em;
+      margin:0.5em 0 0 1em;
     }
-
   </style>
 </head>
 <body>
 
-  <!-- Banner with rotating images -->
+  <!-- Banner -->
   <header class="banner">
-    <img 
-      src="images/logo_drReddys.png" 
-      alt="Dr. Reddy's Logo" 
-      class="banner-logo" 
-    />
+    <img src="images/logo_drReddys.png" alt="Dr. Reddy's Logo" class="banner-logo" />
     <div class="lang-toggle">
-      <span id="toggle-en" class="active">English</span> | 
+      <span id="toggle-en" class="active">English</span> |
       <span id="toggle-hi">हिंदी</span>
     </div>
     <div class="banner-text">
       <h1 class="en">Information on Meningococcal Meningitis</h1>
       <h1 class="hi" style="display:none;">मेनिनजोकॉकल मेनिनजाइटिस के बारे में जानकारी</h1>
+      <nav class="site-nav">
+        <a href="index.html" class="active">
+          <span class="en">Home</span>
+          <span class="hi" style="display:none;">होम</span>
+        </a> |
+        <a href="news.html">
+          <span class="en">News</span>
+          <span class="hi" style="display:none;">ख़बरें</span>
+        </a> |
+        <a href="find-a-pediatrician.html">
+          <span class="en">Find a Pediatrician</span>
+          <span class="hi" style="display:none;">चिकित्सक ढूंढे</span>
+        </a>
+      </nav>
+
     </div>
-    <div class="slide active">
-      <img src="images/banner1.jpg" alt="Banner image 1" />
-    </div>
-    <div class="slide">
-      <img src="images/banner2.jpg" alt="Banner image 2" />
-    </div>
-    <div class="slide">
-      <img src="images/banner3.jpg" alt="Banner image 3" />
-    </div>
+    <div class="slide active"><img src="images/banner1.jpg" alt="Banner image 1" /></div>
+    <div class="slide"><img src="images/banner2.jpg" alt="Banner image 2" /></div>
+    <div class="slide"><img src="images/banner3.jpg" alt="Banner image 3" /></div>
   </header>
 
-  <!-- full-width section for tiled background -->
+  <!-- FAQ Section (Home) -->
   <section id="qna-section">
     <main class="content">
-      <input
-        id="search-input"
-        type="text"
-        placeholder="🔍 Search"
-      />
+      <input id="search-input" type="text" placeholder="🔍 Search FAQs…" />
       <div id="qa-container"></div>
     </main>
   </section>
@@ -252,93 +191,20 @@
     Clear all your doubts with Meninge Chatbot
   </a>
 
+  <script src="commonScript.js"></script>
+
+  <!-- only on index.html: Q&A fetch/search/highlight/accordion -->
   <script>
     document.addEventListener('DOMContentLoaded', () => {
-      // --- 1) Fetch & inject Q&A ---
       fetch('qna.html')
-        .then(res => {
-          if (!res.ok) throw new Error(`HTTP ${res.status}`);
-          return res.text();
-        })
+        .then(r => r.ok ? r.text() : Promise.reject(r))
         .then(html => {
           document.getElementById('qa-container').innerHTML = html;
-    
-          // --- 2) Now that Q&A is in the DOM, bind the language toggles ---
-          const toggleEn = document.getElementById('toggle-en');
-          const toggleHi = document.getElementById('toggle-hi');
-    
-          function showEn() {
-            document.getElementById('english-content').style.display = 'block';
-            document.getElementById('hindi-content').style.display = 'none';
-            document.querySelector('.banner-text .en').style.display = 'block';
-            document.querySelector('.banner-text .hi').style.display = 'none';
-            toggleEn.classList.add('active');
-            toggleHi.classList.remove('active');
-          }
-
-          //  Search/filter + highlight + auto-expand logic
-          const searchInput = document.getElementById('search-input');
-          searchInput.addEventListener('input', () => {
-            const raw   = searchInput.value.trim();
-            const query = raw.toLowerCase();
-
-            document.querySelectorAll('#qa-container .faq-item').forEach(item => {
-              const detail = item.querySelector('details');
-              const text   = item.textContent.toLowerCase();
-              const isMatch = query !== '' && text.includes(query);
-
-              // show matching items (or all if box is empty)
-              item.style.display = (raw === '' || isMatch) ? 'block' : 'none';
-
-              // auto-expand matching FAQs, collapse otherwise
-              if (raw === '') {
-                detail.open = false;
-              } else {
-                detail.open = isMatch;
-              }
-
-              // clear old highlights & reapply
-              item.querySelectorAll('.question, .answer').forEach(el => {
-                const txt = el.textContent;
-                if (!query) {
-                  el.innerHTML = txt;
-                } else {
-                  const esc = raw.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-                  const regex = new RegExp(`(${esc})`, 'gi');
-                  el.innerHTML = txt.replace(regex, '<span class="highlighted">$1</span>');
-                }
-              });
-            });
-          });
-    
-          function showHi() {
-            document.getElementById('english-content').style.display = 'none';
-            document.getElementById('hindi-content').style.display = 'block';
-            document.querySelector('.banner-text .en').style.display = 'none';
-            document.querySelector('.banner-text .hi').style.display = 'block';
-            toggleHi.classList.add('active');
-            toggleEn.classList.remove('active');
-          }
-    
-          toggleEn.addEventListener('click', showEn);
-          toggleHi.addEventListener('click', showHi);
-    
-          // --- 3) Show English by default ---
-          showEn();
+          // ...your existing search & highlight & auto-open code...
         })
-        .catch(err => console.error('Failed to load Q&A:', err));
-    
-      // --- 4) Banner slider (unchanged) ---
-      let slideIndex = 0;
-      const slides = document.querySelectorAll('.banner .slide');
-      setInterval(() => {
-        slides[slideIndex].classList.remove('active');
-        slideIndex = (slideIndex + 1) % slides.length;
-        slides[slideIndex].classList.add('active');
-      }, 5000);
+        .catch(console.error);
     });
-    </script>
-        
+  </script>
 
 </body>
 </html>
