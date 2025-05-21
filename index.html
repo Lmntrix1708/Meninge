@@ -199,8 +199,17 @@
       fetch('qna.html')
         .then(r => r.ok ? r.text() : Promise.reject(r))
         .then(html => {
+          // 1) Inject the Q&A
           document.getElementById('qa-container').innerHTML = html;
-          // ...your existing search & highlight & auto-open code...
+
+          // 2) Re-apply the language toggle to include the new Q&A
+          if (localStorage.getItem('lang') === 'hi') {
+            document.getElementById('toggle-hi').click();
+          } else {
+            document.getElementById('toggle-en').click();
+          }
+
+          // 3) …then initialize your search/highlight/accordion logic…
         })
         .catch(console.error);
     });
