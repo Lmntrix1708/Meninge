@@ -62,4 +62,5 @@ document.addEventListener('DOMContentLoaded', () => {
     idx = (idx + 1) % slides.length;
     slides[idx].classList.add('active');
   }, 5000);
+  
 });

@@ -5,10 +5,25 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Information on Meningococcal Meningitis – Find a Pediatrician</title>
   <link rel="icon" href="images/favicon.png" type="image/png" sizes="32x32">
+
+
+  <!-- Leaflet CSS -->
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet/dist/leaflet.css"
+  />
+  <!-- Leaflet JS -->
+  <script
+    src="https://unpkg.com/leaflet/dist/leaflet.js"
+    defer
+  ></script>
+
+
   <style>
     /* ==== Tile the same background ==== */
     #qna-section {
       background: url('images/background.png') repeat;
+      padding-bottom: 15vh;
     }
 
     /* ==== Global & banner/nav styles ==== */
@@ -75,17 +90,34 @@
     <div class="slide"><img src="images/banner3.jpg" /></div>
   </header>
 
-  <!-- Find a Pediatrician in the same tiled background -->
   <section id="qna-section">
-    <section class="content">
-      <h2>Find a Pediatrician Near You</h2>
-      <form id="search-docs">
-        <input type="text" placeholder="Enter your city or ZIP…" />
-        <button type="submit">Search</button>
-      </form>
-      <div id="results"></div>
-    </section>
+    <div class="content">
+      <h2>
+        <span class="en">Find a Pediatrician Near You</span>
+        <span class="hi" style="display:none;">आपके नजदीकी बाल रोग विशेषज्ञ खोजें</span>
+      </h2>
+
+      <!-- Fallback PIN input (hidden until geolocation fails) -->
+      <div id="fallback-ui" style="margin:1em 0;">
+        <input
+          id="zipcode-input"
+          type="text"
+          placeholder="Enter PIN code…"
+          style="display:none; padding:0.5em; width:200px;"
+        />
+        <button
+          id="zipcode-btn"
+          style="display:none; padding:0.5em 1em; margin-left:0.5em;"
+        >
+          Search
+        </button>
+      </div>
+
+      <!-- Leaflet map placeholder -->
+      <div id="map" style="width:100%; height:400px; border:1px solid #ccc"></div>
+    </div>
   </section>
+
 
   <!-- Chatbot -->
   <a href="https://cdn.botpress.cloud/webchat/v2.4/shareable.html?configUrl=…"
@@ -94,6 +126,18 @@
   </a>
 
   <script src="commonScript.js"></script>
+
+  <script src="findPed.js"></script>
+  <script
+    src="https://unpkg.com/leaflet/dist/leaflet.js"
+    defer
+  ></script>
+  <script>
+    // Wait until Leaflet script loads, then initialize
+    window.addEventListener('load', () => {
+      if (window.L && window.initMap) initMap();
+    });
+  </script>
 
 </body>
 </html>
