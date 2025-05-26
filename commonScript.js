@@ -128,6 +128,38 @@ function initFAQSearchHighlightAndAutoOpen() {
   });
 }
 
+/**
+ * Recursively walks a node and wraps every case-insensitive occurrence of `term`
+ * inside a <span class="highlighted">…</span>, but only in text nodes.
+ */
+function highlightText(container, term) {
+  if (!term) return;
+  const walk = document.createTreeWalker(container, NodeFilter.SHOW_TEXT);
+  const re = new RegExp(term.replace(/[-/\\^$*+?.()|[\]{}]/g,'\\$&'), 'gi');
+  const toHighlight = [];
+  let node;
+  while (node = walk.nextNode()) {
+    if (re.test(node.textContent)) toHighlight.push(node);
+  }
+  toHighlight.forEach(textNode => {
+    const frag = document.createDocumentFragment();
+    let lastIndex = 0;
+    textNode.textContent.replace(re, (match, offset) => {
+      // plain text up to match
+      frag.appendChild(document.createTextNode(textNode.textContent.slice(lastIndex, offset)));
+      // highlighted match
+      const span = document.createElement('span');
+      span.className = 'highlighted';
+      span.textContent = match;
+      frag.appendChild(span);
+      lastIndex = offset + match.length;
+    });
+    // trailing text
+    frag.appendChild(document.createTextNode(textNode.textContent.slice(lastIndex)));
+    textNode.parentNode.replaceChild(frag, textNode);
+  });
+}
+
 function renderCategorizedFAQs() {
   const lang = localStorage.getItem('lang') === 'hi' ? 'hi' : 'en';
   const wrapperId = lang === 'hi' ? 'hindi-content' : 'english-content';
@@ -178,7 +210,10 @@ function renderCategorizedFAQs() {
         const content = document.createElement('div');
         content.classList.add('category-content');
         content.style.display = 'none';
-        bucket.forEach(i => content.appendChild(i));
+        bucket.forEach(item => {
+          item.dataset.orig = item.innerHTML;
+          content.appendChild(item);
+        });
         section.appendChild(content);
 
         btn.addEventListener('click', () => {
@@ -240,6 +275,52 @@ document.addEventListener('DOMContentLoaded', () => {
   if (localStorage.getItem('lang') === 'hi') showHi();
   else showEn();
   renderCategorizedFAQs();
+
+  const searchInput = document.getElementById('search-input');
+  searchInput.addEventListener('input', () => {
+    const term = searchInput.value.trim().toLowerCase();
+    document.querySelectorAll('.category').forEach(section => {
+      const content = section.querySelector('.category-content');
+      const items   = Array.from(content.querySelectorAll('.faq-item'));
+      let anyMatch  = false;
+
+      items.forEach(item => {
+        // restore original
+        item.innerHTML = item.dataset.orig;
+
+        // decide visibility
+        const text = item.textContent.toLowerCase();
+        if (term && text.includes(term)) {
+          item.style.display = '';
+          // highlight matches
+          highlightText(item, term);
+          anyMatch = true;
+        } else if (term) {
+          item.style.display = 'none';
+        } else {
+          // no term => show all
+          item.style.display = '';
+        }
+      });
+
+      // auto-open / hide categories
+      const arrow = section.querySelector('.category-btn .arrow');
+      if (term) {
+        if (anyMatch) {
+          section.style.display        = '';
+          content.style.display        = 'block';
+          arrow.textContent            = '▲';
+        } else {
+          section.style.display        = 'none';
+        }
+      } else {
+        // reset everything when search cleared
+        section.style.display          = '';
+        content.style.display          = 'none';
+        arrow.textContent              = '▼';
+      }
+    });
+  });
 
   // Banner slider (unchanged)
   let idx = 0, slides = document.querySelectorAll('.banner .slide');
