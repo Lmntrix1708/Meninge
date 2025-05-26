@@ -1,59 +1,245 @@
 // commonScript.js
+
+// 1) your six categories
+const categories = [
+  {
+    id: 'understanding',
+    icon: '🧠',
+    label: {
+      en: 'Understanding Meningococcal Meningitis',
+      hi: 'मेनिनजोकॉकल मेनिन्जाइटिस समझें'
+    }
+  },
+  {
+    id: 'symptoms',
+    icon: '⚠️',
+    label: {
+      en: 'Symptoms, Risks & Complications',
+      hi: 'लक्षण, जोखिम और जटिलताएँ'
+    }
+  },
+  {
+    id: 'vaccination',
+    icon: '💉',
+    label: {
+      en: 'Vaccination & Awareness',
+      hi: 'टीकाकरण और जागरूकता'
+    }
+  },
+  {
+    id: 'diagnosis',
+    icon: '🔍',
+    label: {
+      en: 'Diagnosis & Treatment',
+      hi: 'निदान और उपचार'
+    }
+  },
+  {
+    id: 'public-health',
+    icon: '🏥',
+    label: {
+      en: 'Public Health & Surveillance',
+      hi: 'सार्वजनिक स्वास्थ्य और निगरानी'
+    }
+  },
+  {
+    id: 'prevention',
+    icon: '✋',
+    label: {
+      en: 'Prevention & Control',
+      hi: 'रोकथाम और नियंत्रण'
+    }
+  }
+];
+
+// 2) placeholder for your existing search/highlight/auto-open logic
+function initFAQSearchHighlightAndAutoOpen() {
+  document.addEventListener('DOMContentLoaded', () => {
+    fetch('qna.html')
+      .then(r => r.ok ? r.text() : Promise.reject(r))
+      .then(html => {
+        const container = document.getElementById('qa-container');
+        container.innerHTML = html;
+
+        // 1) figure out which language block to pull
+        const lang = localStorage.getItem('lang') === 'hi' ? 'hi' : 'en';
+        const wrapperId = lang === 'hi' ? 'hindi-content' : 'english-content';
+        const wrapper   = document.getElementById(wrapperId);
+
+        // 2) grab only those faq-items
+        const allItems = Array.from(wrapper.querySelectorAll('.faq-item'));
+
+        // 3) group them by data-category
+        const grouped = {};
+        allItems.forEach(item => {
+          const cat = item.dataset.category;
+          if (!grouped[cat]) grouped[cat] = [];
+          grouped[cat].push(item);
+        });
+
+        // 4) clear out the raw HTML and rebuild by category
+        container.innerHTML = '';
+        categories.forEach(({id, icon, label}) => {
+          const items = grouped[id];
+          if (!items || !items.length) return;
+
+          const section = document.createElement('div');
+          section.classList.add('category');
+
+          // build the header button
+          const btn = document.createElement('button');
+          btn.classList.add('category-btn');
+          btn.innerHTML = `
+            <span class="icon">${icon}</span>
+            <span class="en">${label.en}</span>
+            <span class="hi">${label.hi}</span>
+            <span class="arrow">▼</span>
+          `;
+          section.appendChild(btn);
+
+          // the container for that category’s items
+          const content = document.createElement('div');
+          content.classList.add('category-content');
+          content.style.display = 'none';
+          items.forEach(i => content.appendChild(i));
+          section.appendChild(content);
+
+          // wire up the open/close arrow
+          btn.addEventListener('click', () => {
+            const open = content.style.display === 'block';
+            content.style.display = open ? 'none' : 'block';
+            btn.querySelector('.arrow').textContent = open ? '▼' : '▲';
+          });
+
+          container.appendChild(section);
+        });
+
+        // 5) show only the correct language labels on each category button
+        document.querySelectorAll('.category-btn .en')
+          .forEach(el => el.style.display = lang === 'en' ? 'inline' : 'none');
+        document.querySelectorAll('.category-btn .hi')
+          .forEach(el => el.style.display = lang === 'hi' ? 'inline' : 'none');
+
+        // 6) now kick off your existing search/highlight/auto-open logic
+        // (you should have wrapped that in initFAQSearchHighlightAndAutoOpen())
+        initFAQSearchHighlightAndAutoOpen();
+      })
+      .catch(console.error);
+  });
+}
+
+function renderCategorizedFAQs() {
+  const lang = localStorage.getItem('lang') === 'hi' ? 'hi' : 'en';
+  const wrapperId = lang === 'hi' ? 'hindi-content' : 'english-content';
+
+  fetch('qna.html')
+    .then(r => r.ok ? r.text() : Promise.reject(r))
+    .then(html => {
+      // parse out only the right-language block
+      const temp = document.createElement('div');
+      temp.innerHTML = html;
+      const wrapper = temp.querySelector(`#${wrapperId}`);
+      if (!wrapper) return;
+
+      // collect all .faq-item
+      const items = Array.from(wrapper.querySelectorAll('.faq-item'));
+      // group by data-category
+      const grouped = {};
+      items.forEach(item => {
+        const cat = item.dataset.category;
+        if (!grouped[cat]) grouped[cat] = [];
+        grouped[cat].push(item);
+      });
+
+      // clear the container
+      const container = document.getElementById('qa-container');
+      container.innerHTML = '';
+
+      // for each category, if any items exist, build a section
+      categories.forEach(({id, icon, label}) => {
+        const bucket = grouped[id];
+        if (!bucket || !bucket.length) return;
+
+        const section = document.createElement('div');
+        section.classList.add('category');
+
+        // header button
+        const btn = document.createElement('button');
+        btn.classList.add('category-btn');
+        btn.innerHTML = `
+          <span class="icon">${icon}</span>
+          <span class="en">${label.en}</span>
+          <span class="hi">${label.hi}</span>
+          <span class="arrow">▼</span>
+        `;
+        section.appendChild(btn);
+
+        // content panel
+        const content = document.createElement('div');
+        content.classList.add('category-content');
+        content.style.display = 'none';
+        bucket.forEach(i => content.appendChild(i));
+        section.appendChild(content);
+
+        btn.addEventListener('click', () => {
+          const open = content.style.display === 'block';
+          content.style.display = open ? 'none' : 'block';
+          btn.querySelector('.arrow').textContent = open ? '▼' : '▲';
+        });
+
+        container.appendChild(section);
+      });
+
+      // show only the correct language labels on those buttons
+      document.querySelectorAll('.category-btn .en')
+        .forEach(el => el.style.display = lang === 'en' ? '' : 'none');
+      document.querySelectorAll('.category-btn .hi')
+        .forEach(el => el.style.display = lang === 'hi' ? '' : 'none');
+
+      // now wire up your search/highlight/auto-open
+      initFAQSearchHighlightAndAutoOpen();
+    })
+    .catch(console.error);
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   const toggleEn = document.getElementById('toggle-en');
   const toggleHi = document.getElementById('toggle-hi');
 
   function showEn() {
-    // 1) Banner
     document.querySelector('.banner-text .en').style.display = 'block';
     document.querySelector('.banner-text .hi').style.display = 'none';
-
-    // 2) All spans (nav, labels, etc.)
     document.querySelectorAll('span.en').forEach(el => el.style.display = 'inline');
     document.querySelectorAll('span.hi').forEach(el => el.style.display = 'none');
-
-    // 3) Q&A panels (only present on index.html)
-    const enQA = document.getElementById('english-content');
-    const hiQA = document.getElementById('hindi-content');
-    if (enQA && hiQA) {
-      enQA.style.display = 'block';
-      hiQA.style.display = 'none';
-    }
-
-    // 4) Toggle button styles
     toggleEn.classList.add('active');
     toggleHi.classList.remove('active');
   }
 
   function showHi() {
-    // 1) Banner
     document.querySelector('.banner-text .en').style.display = 'none';
     document.querySelector('.banner-text .hi').style.display = 'block';
-
-    // 2) All spans
     document.querySelectorAll('span.en').forEach(el => el.style.display = 'none');
     document.querySelectorAll('span.hi').forEach(el => el.style.display = 'inline');
-
-    // 3) Q&A panels
-    const enQA = document.getElementById('english-content');
-    const hiQA = document.getElementById('hindi-content');
-    if (enQA && hiQA) {
-      enQA.style.display = 'none';
-      hiQA.style.display = 'block';
-    }
-
-    // 4) Toggle button styles
     toggleHi.classList.add('active');
     toggleEn.classList.remove('active');
   }
 
-  // Bind the buttons
-  toggleEn.onclick = () => { showEn(); localStorage.setItem('lang','en'); };
-  toggleHi.onclick = () => { showHi(); localStorage.setItem('lang','hi'); };
+  // re-render FAQs any time the language flips
+  toggleEn.onclick = () => {
+    showEn();
+    localStorage.setItem('lang','en');
+    renderCategorizedFAQs();
+  };
+  toggleHi.onclick = () => {
+    showHi();
+    localStorage.setItem('lang','hi');
+    renderCategorizedFAQs();
+  };
 
-  // On load
+  // on first load, set banner+nav then render
   if (localStorage.getItem('lang') === 'hi') showHi();
   else showEn();
+  renderCategorizedFAQs();
 
   // Banner slider (unchanged)
   let idx = 0, slides = document.querySelectorAll('.banner .slide');
@@ -62,5 +248,4 @@ document.addEventListener('DOMContentLoaded', () => {
     idx = (idx + 1) % slides.length;
     slides[idx].classList.add('active');
   }, 5000);
-  
 });

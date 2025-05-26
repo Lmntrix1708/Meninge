@@ -143,6 +143,36 @@
     .faq-item details .answer {
       margin:0.5em 0 0 1em;
     }
+
+    .category {
+      margin-bottom: 1rem;
+    }
+    .category-btn {
+      display: inline-flex;
+      align-items: center;
+      width: 100%;
+      background: #5e2b8a;
+      color: #fff;
+      padding: 1em 1.5em;
+      font-size: 1.25em;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      margin-bottom: 0.5rem;
+    }
+    .category-btn .icon {
+      margin-right: 0.5em;
+      font-size: 1.3em;
+    }
+    .category-btn .arrow {
+      margin-left: auto;
+      font-size: 1.2em;
+    }
+    .category-content {
+      padding: 0 1.5em 1em;
+      border-left: 4px solid #5e2b8a;
+    }
+
   </style>
 </head>
 <body>
@@ -193,28 +223,6 @@
   </a>
 
   <script src="commonScript.js"></script>
-
-  <!-- only on index.html: Q&A fetch/search/highlight/accordion -->
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      fetch('qna.html')
-        .then(r => r.ok ? r.text() : Promise.reject(r))
-        .then(html => {
-          // 1) Inject the Q&A
-          document.getElementById('qa-container').innerHTML = html;
-
-          // 2) Re-apply the language toggle to include the new Q&A
-          if (localStorage.getItem('lang') === 'hi') {
-            document.getElementById('toggle-hi').click();
-          } else {
-            document.getElementById('toggle-en').click();
-          }
-
-          // 3) …then initialize your search/highlight/accordion logic…
-        })
-        .catch(console.error);
-    });
-  </script>
 
 </body>
 </html>
