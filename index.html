@@ -173,6 +173,44 @@
       border-left: 4px solid #5e2b8a;
     }
 
+    /* two equally-sized columns, but video fixed at 35% */
+    .two-col {
+      display: flex;
+      align-items: flex-start;  /* top-align both */
+      gap: 1.5rem;
+    }
+
+    /* Left video pane: always 35% of parent */
+    .video-pane {
+      flex: 0 0 35%;
+      max-width: 35%;
+    }
+
+    /* Make your iframe fill its pane & maintain 16:9 */
+    .video-pane iframe {
+      width: 100%;
+      aspect-ratio: 16/9;
+      border: none;
+      border-radius: 4px;
+    }
+
+    /* Right categories list: takes remaining 65% */
+    .categories-pane {
+      flex: 1;
+      max-width: 65%;
+    }
+
+    /* Ensure the button list scrolls if it grows too tall */
+    .categories-pane {
+      overflow-y: auto;
+      padding-right: 0.5em;
+    }
+
+    /* And your category-content (the expanded Q&A) sits full-width beneath */
+    #category-content {
+      margin-top: 2rem;
+    }
+
   </style>
 </head>
 <body>
@@ -211,9 +249,34 @@
   <!-- FAQ Section (Home) -->
   <section id="qna-section">
     <main class="content">
-      <input id="search-input" type="text" placeholder="🔍 Search FAQs…" />
-      <div id="qa-container"></div>
-    </main>
+
+    <!-- Search bar (if you have one) -->
+    <input id="search-input" type="text" placeholder="🔍 Search FAQs…" />
+
+    <!-- NEW: two-column wrapper -->
+    <div class="two-col">
+
+      <!-- LEFT: fixed video pane -->
+      <div class="video-pane">
+        <iframe
+          src="https://www.youtube.com/embed/VIDEO_ID"
+          title="Meningococcal Overview"
+          allowfullscreen>
+        </iframe>
+      </div>
+
+      <!-- RIGHT: your existing category buttons -->
+      <div class="categories-pane" id="qa-container">
+        <!-- JS will append your 6 <button class="category-btn">…</button> rows here -->
+      </div>
+
+    </div>
+
+    <!-- BELOW: where your expanded FAQs will go -->
+    <section id="category-content"></section>
+
+  </main>
+
   </section>
 
   <!-- Chatbot -->
